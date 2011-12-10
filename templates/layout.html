@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>read.list</title>
+	<link type="text/css" rel="stylesheet" href="static/default.css">
+</head>
+<body>
+	<h1>read.list</h1>	
+	
+	{% for msg in get_flashed_messages() %}
+	<div class="msg">{{ msg }}</div>
+	{% endfor %}
+
+	{% block body %}{% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<h2>add book</h2>
+<form action="/add" method="POST">
+	<p>title: <input type="text" name="title"></p>
+	<p>description: <input type="text" name="description"></p>
+	<input type="submit" value="add">
+</form>
+
+{% if books %}
+<ul id="books">
+	{% for book in books %}
+	<li> 
+	<strong>{{ book.title }}</strong>
+	<p>{{ book.description }}</p>
+	<time>{{ book.created }}</time>
+	<a href="{{ url_for('remove_book', book_id=book.id) }}">[x]</a></li>
+	{% endfor %}
+</ul>
+{% else %}
+<p><strong>No books! Add some first.</strong></p>
+{% endif %}
+{% endblock %}

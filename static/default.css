@@ -1,0 +1,20 @@
+body {
+    width: 80%;
+    margin: 0 auto;
+}
+.msg {
+    background: green;
+    padding: 3px;
+    margin: 3px 0;
+}
+
+#books {
+    margin: 0;
+    padding: 0;
+}
+#books li {
+    background: #eee;
+    margin: 5px 0;
+    padding: 5px;
+    list-style-type:none;
+}
