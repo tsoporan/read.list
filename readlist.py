@@ -35,7 +35,7 @@ def teardown_request(exception):
 
 @app.route('/')
 def book_list():
-    cur = g.db.execute('select *from books order by id desc')
+    cur = g.db.execute('select * from books order by id desc')
 
     books = [
         dict(
