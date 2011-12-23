@@ -98,7 +98,7 @@
                 
             <h3>{{ book.title }}</h3>
 	    <p class="desc">{{ book.description|urlize }}</p>
-	    <time>created: {{ book.created }}</time>
+            <time>added: <strong>{{ book.created|datetimeformat }}</strong> </time>
         
             </div> 
 

@@ -49,6 +49,10 @@ table {
 
 /* --- end resets --- */
 
+a {
+    text-decoration: none;
+}
+
 body {
     width: 80%;
     margin: 0 auto;
@@ -67,11 +71,36 @@ header {
     background: -o-linear-gradient(top, #606c88 0%,#3f4c6b 100%); /* Opera 11.10+ */
     background: -ms-linear-gradient(top, #606c88 0%,#3f4c6b 100%); /* IE10+ */
     background: linear-gradient(top, #606c88 0%,#3f4c6b 100%);
+    overflow: hidden;
+}
+
+header h1 {
+    float: left;
+    margin: 0 10px;
+}
+#site_nav {
+    float: right;
+    margin: 10px;
+}
+#site_nav a {
+    background: #222;
+    border-radius: 3px;
+    color: #fff;
+    padding: 5px;
+    box-shadow: 1px 0px 1px 0px #546387;
+    text-shadow: 1px 1px 1px #444;
+}
+#site_nav a:hover {
+    background: #2F384D;
+}
+
+strong {
+    font-weight: bold;
 }
 
 h1 {
     font-family: 'Viga', sans-serif;
-    font-size: 3em;
+    font-size: 2em;
     text-shadow: 1px 0 5px #222;    
 }
 h3 {
@@ -112,21 +141,6 @@ time {
     position: absolute;
     right: 0;
     top: -10px;
-}
-
-a {
-    text-decoration: none;
-}
-
-#site_nav {
-    margin: 15px 0 0; 
-}
-a.add {
-    background: #222;
-    border-radius: 3px;
-    color: #fff;
-    padding: 5px;
-    
 }
 
 /* simple modal css */

@@ -1,5 +1,6 @@
 from flask import Flask, g, request, flash, url_for, redirect, jsonify, escape
 from flask import render_template
+from jinja2 import filters
 from jinja2.utils import urlize
 from contextlib import closing
 import sqlite3
@@ -37,6 +38,13 @@ book_html = """
     </li>
 """ 
 
+date_format = "%b %d, %Y @ %H:%m"
+
+def datetimeformat(value, format=date_format):
+    return value.strftime(format)
+
+filters.FILTERS['datetimeformat'] = datetimeformat
+
 def init_db():
     print app.config
     with closing(connect_db()) as db:
@@ -59,15 +67,21 @@ def teardown_request(exception):
 def book_list():
     cur = g.db.execute('select * from books order by id desc')
 
-    books = [
-        dict(
-            id=row[0],
-            title=row[1],
-            description=row[2],
-            finished=row[3], 
-            created=row[4]) for row in cur.fetchall()
-    ]
+    books = []
     
+    for row in cur.fetchall():
+        d = {}
+        d['id'] = row[0]
+        d['title'] = row[1]
+        d['description'] = row[2]
+        d['finished'] = row[3]
+        
+        #convert back to a datetime obj
+        created = row[4].split('.')[0] 
+        created = datetime.datetime.strptime(created, '%Y-%m-%d %H:%M:%S')
+        d['created'] = created
+        books.append(d)
+
     return render_template('book_list.html', books=books)
 
 @app.route('/add', methods=['POST'])
@@ -104,7 +118,7 @@ def add_book():
                     book_id,
                     title,
                     urlize(description),
-                    created,
+                    datetime.datetime.strftime(created, date_format),
                     book_id,
                     title,
                     description,
@@ -142,7 +156,7 @@ def update_book():
                 book[0],
                 book[1], #title
                 urlize(book[2]), #desc
-                book[4], #date
+                datetime.datetime.strftime(book[4], date_format), #date
                 book[0],
                 book[1],
                 book[2],
