@@ -2,16 +2,30 @@
 <html lang="en">
 <head>
 	<title>read.list</title>
-	<link type="text/css" rel="stylesheet" href="static/default.css">
+	<link type="text/css" rel="stylesheet" href="static/css/default.css">
+	<link href='http://fonts.googleapis.com/css?family=Viga' rel='stylesheet' type='text/css'>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>	<script src="static/js/jquery.simplemodal.1.4.1.min.js"></script>
+	{% block extra_js %}{% endblock %}
 </head>
+
 <body>
-	<h1>read.list</h1>	
-	
+	<header>
+	    <h1>read.list</h1>	
+	</header>
+        
+        <ul id="messages">
 	{% for msg in get_flashed_messages() %}
-	<div class="msg">{{ msg }}</div>
+	    <li class="msg">{{ msg }}</div>
 	{% endfor %}
+        </ul>
+
+	<nav id="site_nav">
+	<ul>
+		<li><a class="add" href="#">add book</a></li>
+	</ul>
+	</nav>
 
 	{% block body %}{% endblock %}
-
 </body>
+
 </html>

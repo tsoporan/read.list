@@ -1,0 +1,148 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/* --- end resets --- */
+
+body {
+    width: 80%;
+    margin: 0 auto;
+    line-height: 1.4;
+}
+
+header {
+    padding: 5px;
+    margin: 0;
+    border-radius: 0 0 5px 5px;
+    color: #fff;
+    background: #606c88; /* Old browsers */
+    background: -moz-linear-gradient(top, #606c88 0%, #3f4c6b 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#606c88), color-stop(100%,#3f4c6b)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #606c88 0%,#3f4c6b 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #606c88 0%,#3f4c6b 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #606c88 0%,#3f4c6b 100%); /* IE10+ */
+    background: linear-gradient(top, #606c88 0%,#3f4c6b 100%);
+}
+
+h1 {
+    font-family: 'Viga', sans-serif;
+    font-size: 3em;
+    text-shadow: 1px 0 5px #222;    
+}
+h3 {
+    font-size: 1.5em;
+    border-bottom: 2px solid #ddd;
+}
+
+p.desc {
+    padding: 20px 0;
+}
+
+time {
+    font-size: .7em;
+}
+
+.msg {
+    background: #2ea607;
+    padding: 3px;
+    margin: 3px 0;
+    color: #134701;
+    margin: 20px 0 0;
+    border-radius: 3px;
+}
+
+#books {
+    padding: 20px 0;
+}
+#books li {
+    background: #fff;
+    margin: 25px 0;
+    padding: 10px;
+    list-style-type:none;
+    box-shadow: 1px 1px 20px 0px #ddd;
+    position: relative;
+}
+
+#book_nav {
+    position: absolute;
+    right: 0;
+    top: -10px;
+}
+
+a {
+    text-decoration: none;
+}
+
+#site_nav {
+    margin: 15px 0 0; 
+}
+a.add {
+    background: #222;
+    border-radius: 3px;
+    color: #fff;
+    padding: 5px;
+    
+}
+
+/* simple modal css */
+#basic-modal-content {display:none;}
+
+/* Overlay */
+#simplemodal-overlay {background-color:#000; cursor:wait;}
+
+/* Container */
+#simplemodal-container {height:360px; width:600px; color:#bbb; background-color:#333; border:4px solid #444; padding:12px;}
+#simplemodal-container .simplemodal-data {padding:8px;}
+#simplemodal-container code {background:#141414; border-left:3px solid #65B43D; color:#bbb; display:block; font-size:12px; margin-bottom:12px; padding:4px 6px 6px;}
+#simplemodal-container a {color:#ddd;}
+#simplemodal-container a.modalCloseImg {background:url(/static/img/x.png) no-repeat; width:25px; height:29px; display:inline; z-index:3200; position:absolute; top:-15px; right:-16px; cursor:pointer;}
+#simplemodal-container h3 {color:#84b8d9;}
+
+/* ie */
+#simplemodal-container a.modalCloseImg {background:none; right:-14px; width:22px; height:26px; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/static/img/x.png',sizingMethod='scale');}
+

@@ -1,5 +1,6 @@
-from flask import Flask, g, request, flash, url_for, redirect
+from flask import Flask, g, request, flash, url_for, redirect, jsonify, escape
 from flask import render_template
+from jinja2.utils import urlize
 from contextlib import closing
 import sqlite3
 import os
@@ -14,6 +15,27 @@ DEBUG = True
 
 app = Flask(__name__)
 app.config.from_object(__name__)
+
+book_html = """
+    <li>
+    <div class="content">
+        <nav id="book_nav">
+            <a href="" class="edit">[edit]</a>
+            <a href="/finish/%s">[finish]</a>
+            <a href="/remove/%s">[remove]</a>
+        </nav>
+        <h3>%s</h3>
+        <p class="desc">%s</p>
+        <time>created: %s</time>
+    </div>
+
+    <div class="edit" id="%s" style="display:none">
+        <p><input class="edit_title" type="text" name="edit_title" value="%s"></p>
+        <p><textarea class="edit_desc" name="edit_desc">%s</textarea></p>
+        <button type="submit">Save</button>
+    </div>
+    </li>
+""" 
 
 def init_db():
     print app.config
@@ -50,16 +72,89 @@ def book_list():
 
 @app.route('/add', methods=['POST'])
 def add_book():
-    
-    title = request.form['title']
-    description = request.form['description']
+   
+    title = escape(request.form.get('title', ''))
+    description = escape(request.form.get('description', ''))
     created = datetime.datetime.now()
+    
+    if title and description:
+        
+        error = None 
+        
+        #some basic dupe checking
+        existing = g.db.execute('select * from books where title like (?)', [title]).fetchall()
+        g.db.commit()
 
-    g.db.execute('insert into books (title, description, created) values (?, ?, ?)', [title, description, created])
+        if existing:
+            error = u"A book with this title already exists!"
+       
+        if request.is_xhr:
+         
+            if error:
+                return jsonify(error=error)
+            
+            #create new book
+            g.db.execute('insert into books (title, description, created) values (?, ?, ?)', [title, description, created])
+            g.db.commit()
+        
+            book_id = g.db.execute('select id from books where title like (?)', [title]).fetchone()[0]
 
-    g.db.commit()
-    flash('New book entry was successfully posted!')
-    return redirect(url_for('book_list'))
+            html = book_html % (
+                    book_id,
+                    book_id,
+                    title,
+                    urlize(description),
+                    created,
+                    book_id,
+                    title,
+                    description,
+            )
+
+            return jsonify(html=html)
+        
+        else:
+            return u"XHR requests only."
+    
+    else:
+        return jsonify(error="Oops, needs a title and description!")
+
+@app.route('/update', methods=['POST'])
+def update_book():
+    """Update changes to book (if new)."""
+
+    book_id = escape(request.form.get('book_id', ''))
+    edit_title = escape(request.form.get('edit_title', ''))
+    edit_desc = escape(request.form.get('edit_desc', ''))
+
+    if book_id and edit_title and edit_desc:
+        
+        if request.is_xhr:
+            
+            #update the book informations and return html
+            g.db.execute('update books SET title = ?, description = ? WHERE rowid = ?', (edit_title, edit_desc, int(book_id)))
+            g.db.commit()
+
+            book = g.db.execute('select * from books where id = ?', [int(book_id)]).fetchone()
+            g.db.commit()
+
+            html = book_html % (
+                book[0], #id 
+                book[0],
+                book[1], #title
+                urlize(book[2]), #desc
+                book[4], #date
+                book[0],
+                book[1],
+                book[2],
+            )
+
+            return jsonify(success=True, html=html) 
+        
+        else:
+            return u"XHR requests only."
+    
+    else:
+        return jsonify(error=u"Oops, needs updated content!")
 
 
 @app.route('/remove/<int:book_id>')
@@ -68,6 +163,12 @@ def remove_book(book_id):
     g.db.commit()
     flash("Book was removed.")
     return redirect(url_for('book_list')) 
+
+@app.route('/finish/<int:book_id>')
+def finish_book(book_id):
+    #g.db.execute()
+    flash("Book marked finished!")
+    return redirect(url_for('book_list'))
 
 @app.errorhandler(404)
 def page_not_found(error):
