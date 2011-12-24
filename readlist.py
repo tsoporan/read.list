@@ -18,12 +18,12 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 
 book_html = """
-    <li>
-    <div class="content">
+    <li class="%s">
+    <div class="content" id="%s">
         <nav id="book_nav">
-            <a href="" class="edit">[edit]</a>
-            <a href="/finish/%s" class="finish">[finish]</a>
-            <a href="/remove/%s" class="remove">[remove]</a>
+            <a href="#" class="edit">[edit]</a>
+            <a href="#" class="finish">[finish]</a>
+            <a href="#" class="remove">[remove]</a>
         </nav>
         <h3>%s</h3>
         <p class="desc">%s</p>
@@ -75,7 +75,7 @@ def teardown_request(exception):
     g.db.close()
 
 @app.route('/')
-def book_list():
+def index():
     cur = g.db.execute('select * from books order by id desc')
 
     books = []
@@ -89,7 +89,7 @@ def book_list():
         d['created'] = convert_date(row[4]) 
         books.append(d)
 
-    return render_template('book_list.html', books=books)
+    return render_template('index.html', books=books)
 
 @app.route('/add', methods=['POST'])
 def add_book():
@@ -107,7 +107,7 @@ def add_book():
         g.db.commit()
 
         if existing:
-            error = u"A book with this title already exists!"
+            error = u"A book with this title already exists! DUN DUN DUN ..."
        
         if request.is_xhr:
          
@@ -121,7 +121,7 @@ def add_book():
             book_id = g.db.execute('select id from books where title like (?)', [title]).fetchone()[0]
 
             html = book_html % (
-                    book_id,
+                    'reading', #assume book is not finished if just added
                     book_id,
                     title,
                     urlize(description),
@@ -137,11 +137,10 @@ def add_book():
             return u"XHR requests only."
     
     else:
-        return jsonify(error="Oops, needs a title and description!")
+        return jsonify(error="Missing the stuffs!")
 
 @app.route('/update', methods=['POST'])
 def update_book():
-    """Update changes to book (if new)."""
 
     book_id = escape(request.form.get('book_id', ''))
     edit_title = escape(request.form.get('edit_title', ''))
@@ -159,8 +158,8 @@ def update_book():
             g.db.commit()
 
             html = book_html % (
-                book[0], #id 
-                book[0],
+                'finished' if book[3] else 'reading', #book could be finished 
+                book[0], #id
                 book[1], #title
                 urlize(book[2]), #desc
                 datetimeformat(convert_date(book[4])),
@@ -175,21 +174,52 @@ def update_book():
             return u"XHR requests only."
     
     else:
-        return jsonify(error=u"Oops, needs updated content!")
+        return jsonify(error=u"Missing all the stuffs.")
 
 
-@app.route('/remove/<int:book_id>')
-def remove_book(book_id):
-    g.db.execute('delete from books where id is (?)' , [book_id])
-    g.db.commit()
-    flash("Book was removed.")
-    return redirect(url_for('book_list')) 
+@app.route('/remove', methods=['POST'])
+def remove_book():
+        
+    book_id = escape(request.form.get('book_id', None))
+   
+    if book_id:
+        if request.is_xhr:
+          
+            #delete book for id
+            g.db.execute('delete from books where id is (?)' , [book_id])
+            g.db.commit()
+   
+            return jsonify(msg=u"D: book was removed!")
 
-@app.route('/finish/<int:book_id>')
-def finish_book(book_id):
-    #g.db.execute()
-    flash("Book marked finished!")
-    return redirect(url_for('book_list'))
+        else:
+            return u"XHR requests only."
+    else:
+        return jsonify(error="No book id? o.o")
+
+
+@app.route('/finish', methods=['POST'])
+def finish_book():
+    
+    book_id = escape(request.form.get('book_id', None))
+   
+    if book_id:
+
+        if request.is_xhr:
+            #update book, set finished to 1
+            g.db.execute('update books SET finished = ? WHERE rowid = ?', [1, book_id])
+            g.db.commit() 
+            
+            return jsonify(msg=u"Woot! You finished ze book! Hug yourself. Do it.")
+
+        else:
+            return u"XHR requests only."
+    else:
+        return jsonify(error=u"No book id? o.o")
+
+@app.route('/sort', methods=['GET'])
+def sort():
+    #sort by: all | finished
+    pass
 
 @app.errorhandler(404)
 def page_not_found(error):

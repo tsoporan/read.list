@@ -144,6 +144,10 @@ time {
     margin: 20px 0 0;
     border-radius: 3px;
 }
+.msg:hover {
+    cursor: pointer;
+}
+
 
 #books {
     padding: 20px 0;
@@ -161,6 +165,10 @@ time {
     position: absolute;
     right: 0;
     top: -10px;
+}
+
+li.finished {
+    border: 5px solid #2ea607;
 }
 
 footer {

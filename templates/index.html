@@ -74,7 +74,70 @@
 
                 return false;
 
-            });  
+            });
+
+            var notify = function(msg) {
+                html = '<li class="msg">' + msg + '</li>';
+                $('#messages').append(html);
+            }
+
+            $('a.remove').live('click', function() {
+                    
+                var answer = confirm('Sure ya wanna remove this book?');
+
+                container =  $(this).parent().parent().parent();
+                book_id = container.find('div.content').attr('id');
+
+                if (answer) {
+
+                    $.ajax({
+                        url: '/remove',
+                        type: 'POST',
+                        data: {
+                            'book_id': book_id
+                        }, 
+                        success: function(data) {
+
+                            // remove old book
+                            container.remove();    
+                            notify(data.msg);
+                        } 
+                    });
+                }
+
+                return false;
+            });
+                
+
+            $('a.finish').live('click', function() {
+                var answer = confirm('Mark this book finished?');
+                
+                container =  $(this).parent().parent().parent();
+                book_id = container.find('div.content').attr('id');
+
+                if (answer) {
+
+                    $.ajax({
+                        url: '/finish',
+                        type: 'POST',
+                        data: {
+                            'book_id': book_id
+                        }, 
+                        success: function(data) {
+                            //mark as finished
+                            container.attr('class', 'finished');
+                            notify(data.msg);   
+                        } 
+                    });
+                }
+
+                return false;
+            });
+
+            $('li.msg').live('click', function() {
+                $(this).css('display', 'none');      
+                return false;    
+            });
         });
 	</script>
 {% endblock %}
@@ -97,12 +160,12 @@
 {% if books %}
 <ul id="books">
 	{% for book in books %}
-        <li> 
-            <div class="content">
+        <li class="{% if book.finished == 1 %}finished{% else %}reading{% endif %}"> 
+            <div class="content" id="{{ book.id }}">
                 <nav id="book_nav">    
-                    <a href="" class="edit">[edit]</a>
-                    <a href="/finish/{{ book.id }}" class="finish">[finish]</a>
-                    <a href="/remove/{{ book.id }}" class="remove">[remove]</a>
+                    <a href="#" class="edit">[edit]</a>
+                    <a href="#" class="finish">[finish]</a>
+                    <a href="#" class="remove">[remove]</a>
                 </nav> 
                 
             <h3>{{ book.title }}</h3>
