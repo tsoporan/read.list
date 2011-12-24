@@ -22,21 +22,28 @@ book_html = """
     <div class="content">
         <nav id="book_nav">
             <a href="" class="edit">[edit]</a>
-            <a href="/finish/%s">[finish]</a>
-            <a href="/remove/%s">[remove]</a>
+            <a href="/finish/%s" class="finish">[finish]</a>
+            <a href="/remove/%s" class="remove">[remove]</a>
         </nav>
         <h3>%s</h3>
         <p class="desc">%s</p>
-        <time>created: %s</time>
+        <time>added: <strong>%s</strong></time>
     </div>
 
     <div class="edit" id="%s" style="display:none">
-        <p><input class="edit_title" type="text" name="edit_title" value="%s"></p>
-        <p><textarea class="edit_desc" name="edit_desc">%s</textarea></p>
-        <button type="submit">Save</button>
+        <h3>edit book</h3>
+        <p>
+        <strong>Title</strong>
+        <input class="edit_title" type="text" name="edit_title" value="%s">
+        </p>
+        <p>
+        <strong>Description</strong>
+        <textarea rows="10" cols="50" class="edit_desc" name="edit_desc">%s</textarea>
+        </p>
+        <button type="submit" name="edit_submit">save</button>
     </div>
     </li>
-""" 
+""".strip() 
 
 date_format = "%b %d, %Y @ %H:%m"
 
@@ -44,6 +51,10 @@ def datetimeformat(value, format=date_format):
     return value.strftime(format)
 
 filters.FILTERS['datetimeformat'] = datetimeformat
+
+def convert_date(s):
+    date = s.split('.')[0] 
+    return datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
 
 def init_db():
     print app.config
@@ -75,11 +86,7 @@ def book_list():
         d['title'] = row[1]
         d['description'] = row[2]
         d['finished'] = row[3]
-        
-        #convert back to a datetime obj
-        created = row[4].split('.')[0] 
-        created = datetime.datetime.strptime(created, '%Y-%m-%d %H:%M:%S')
-        d['created'] = created
+        d['created'] = convert_date(row[4]) 
         books.append(d)
 
     return render_template('book_list.html', books=books)
@@ -118,7 +125,7 @@ def add_book():
                     book_id,
                     title,
                     urlize(description),
-                    datetime.datetime.strftime(created, date_format),
+                    datetimeformat(created),
                     book_id,
                     title,
                     description,
@@ -156,7 +163,7 @@ def update_book():
                 book[0],
                 book[1], #title
                 urlize(book[2]), #desc
-                datetime.datetime.strftime(book[4], date_format), #date
+                datetimeformat(convert_date(book[4])),
                 book[0],
                 book[1],
                 book[2],

@@ -2,18 +2,18 @@
 {% block extra_js %}
 	<script type="text/javascript">
 	$(document).ready(function() {
-            $('.add').click(function() {
-                $('#add_form').modal();  
+            $('a.add').click(function() {
+                $('div.add').modal();  
                 return false;    
             });
 
-            $('input[name="submit"]').click(function() {
+            $('button[name="add_submit"]').click(function() {
                 $.ajax({
                     url: '/add',
                     type: 'POST',
                     data: {
                          'title': $('input[name="title"]').val(),
-                         'description': $('input[name="description"]').val()
+                         'description': $('textarea[name="description"]').val()
                     },
                     success: function(data) {
                         $.modal.close();
@@ -39,7 +39,7 @@
 
                 book_id = edit.attr('id');
 
-                edit.find('button[type="submit"]').click(function() {
+                edit.find('button[name="edit_submit"]').click(function() {
                     
                     edit_title = edit.find('.edit_title').val();
                     edit_desc = edit.find('.edit_desc').val();
@@ -80,11 +80,20 @@
 {% endblock %}
 
 {% block body %}
-<form id="add_form" action="/add" method="POST" style="display:none">
-    <p>title: <input type="text" name="title"></p>
-    <p>description: <input type="text" name="description"></p>
-    <input type="submit" name="submit" value="add">
-</form>
+<div class="add" style="display:none;">
+    <h3>add book</h3>
+    <p>
+    <strong>Title</strong> 
+    <input type="text" name="title">
+    </p>
+    <p>
+    <strong>Description</strong>
+    <textarea name="description" rows="10" cols="50"></textarea>
+    <span class="helptext"><strong>Help text:</strong> Describe the book. It is often helpful to add cues to remember why this book is important to you and why you want to read it. Links are good too!</span>
+    </p>
+
+    <button type="submit" name="add_submit">add</button>
+</div>
 {% if books %}
 <ul id="books">
 	{% for book in books %}
@@ -92,8 +101,8 @@
             <div class="content">
                 <nav id="book_nav">    
                     <a href="" class="edit">[edit]</a>
-                    <a href="/finish/{{ book.id }}">[finish]</a>
-                    <a href="/remove/{{ book.id }}">[remove]</a>
+                    <a href="/finish/{{ book.id }}" class="finish">[finish]</a>
+                    <a href="/remove/{{ book.id }}" class="remove">[remove]</a>
                 </nav> 
                 
             <h3>{{ book.title }}</h3>
@@ -103,9 +112,16 @@
             </div> 
 
             <div class="edit" id="{{ book.id }}" style="display: none;">
-                <p><input class="edit_title" type="text" name="edit_title" value="{{ book.title }}"></p>
-                <p><textarea class="edit_desc" name="edit_desc">{{ book.description }}</textarea></p>
-                <button type="submit">Save</button>
+                <h3>edit book</h3>
+                <p>
+                <strong>Title</strong>
+                <input class="edit_title" type="text" name="edit_title" value="{{ book.title }}">
+                </p>
+                <p>
+                <strong>Description</strong>
+                <textarea rows="10" cols="50" class="edit_desc" name="edit_desc">{{ book.description }}</textarea>
+                </p>
+                <button type="submit" name="edit_submit">save</button>
             </div>
             
         </li>
