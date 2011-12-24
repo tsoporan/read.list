@@ -21,6 +21,11 @@
                             alert(data.error);
                         } else {
                             $('#books').prepend(data.html);    
+
+                            // remove 'no books' text
+                            if ($.find('.first_time')) {
+                                $('.first_time').css('display', 'none');
+                            }    
                         }    
                     }
                 });
@@ -193,6 +198,7 @@
 	{% endfor %}
 </ul>
 {% else %}
-    <p><strong>No books! Add some first.</strong></p>
+    <p class="first_time" style="margin: 10px 0;"><strong>No books! Add some first.</strong></p>
+    <ul id="books"></ul>
 {% endif %}
 {% endblock %}
