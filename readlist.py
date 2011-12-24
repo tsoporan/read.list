@@ -18,12 +18,13 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 
 book_html = """
-    <li class="%s">
+    <li>
+    <span class="%s"></span>
     <div class="content" id="%s">
         <nav id="book_nav">
-            <a href="#" class="edit">[edit]</a>
-            <a href="#" class="finish">[finish]</a>
-            <a href="#" class="remove">[remove]</a>
+            <a href="#" class="edit">edit |</a>
+            <a href="#" class="finish">finish | </a>
+            <a href="#" class="remove">remove</a>
         </nav>
         <h3>%s</h3>
         <p class="desc">%s</p>

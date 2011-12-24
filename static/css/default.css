@@ -154,7 +154,7 @@ time {
 }
 #books li {
     background: #fff;
-    margin: 25px 0;
+    margin: 40px 0;
     padding: 10px;
     list-style-type:none;
     box-shadow: 1px 1px 20px 0px #ddd;
@@ -164,11 +164,27 @@ time {
 #book_nav {
     position: absolute;
     right: 0;
-    top: -10px;
+    top: -29px;
+    background: #606c88;
+    border-radius: 5px 5px 0 0;
+    font-size: .8em;
+    padding: 5px;
+    text-shadow: 1px 1px 0 #333;
+    box-shadow: 0px 1px 0px 0px #555;
+}
+#book_nav a {
+    color: #fff;
 }
 
-li.finished {
-    border: 5px solid #2ea607;
+.finished {
+    width: 0;
+    height: 0;
+    border-top: 30px solid #2ea607;
+    border-right: 30px solid transparent;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: .8;
 }
 
 footer {

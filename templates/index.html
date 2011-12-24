@@ -125,7 +125,7 @@
                         }, 
                         success: function(data) {
                             //mark as finished
-                            container.attr('class', 'finished');
+                            container.find('span').attr('class', 'finished');
                             notify(data.msg);   
                         } 
                     });
@@ -160,12 +160,14 @@
 {% if books %}
 <ul id="books">
 	{% for book in books %}
-        <li class="{% if book.finished == 1 %}finished{% else %}reading{% endif %}"> 
+        <li> 
+            <span class={% if book.finished == 1 %}"finished"{% else %}"reading"{% endif %}></span>
+
             <div class="content" id="{{ book.id }}">
                 <nav id="book_nav">    
-                    <a href="#" class="edit">[edit]</a>
-                    <a href="#" class="finish">[finish]</a>
-                    <a href="#" class="remove">[remove]</a>
+                    <a href="#" class="edit" title="edit book">edit |</a>
+                    <a href="#" class="finish" title="finish book">finish | </a>
+                    <a href="#" class="remove" title="remove book">remove</a>
                 </nav> 
                 
             <h3>{{ book.title }}</h3>
