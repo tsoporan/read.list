@@ -9,7 +9,7 @@ Simple. Add, remove and check off finished books.
 
 # requirements #
 
-* ![Flask](http://flask.pocoo.org)
+* [Flask](http://flask.pocoo.org)
 
 *virtualenv is not required but recommended*
 
@@ -23,7 +23,7 @@ Simple. Add, remove and check off finished books.
 
 4. enjoy ze books
 
-# Notes #
+# notes #
 
 * This is a weekend project, there or may or may-not be bugs/security issues.
 * Built to fit a single users needs
