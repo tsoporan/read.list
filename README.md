@@ -6,5 +6,8 @@ finished. Grown out of my laziness to use goodreads.
 
 Simple. Add, remove and check off finished books. 
 
+**Note:**
+
+This is a weekend-project, there or may or may-not be bugs/security issues.
 
 
